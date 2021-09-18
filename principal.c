@@ -5,6 +5,7 @@ int main(void){
   // PC8 en pull up input
   GPIOC->CRH &= ~(0xF);
   GPIOC->CRH |= 0x8;
+  GPIO->ODR |= 0x1 << 8;
   // PC10 en pulldown output
   GPIOC->CRH &= ~(0xF00);
   GPIOC->CRH |= 0x1 << 8;
