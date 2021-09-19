@@ -45,6 +45,13 @@ void MyGPIO_Reset(GPIO_TypeDef * GPIO , char GPIO_Pin ){
 }
 
 void MyGPIO_Toggle(GPIO_TypeDef * GPIO , char GPIO_Pin ){
-  // ca pue ce truc pas sûr que ca marche
-  GPIO->ODR |= (((*(GPIO->IDR) >> GPIO_Pin) << 15 )>> 15-GPIO_Pin);
+  // Créer masque
+  char idrPin = 0x1;
+  for (int i=0;i<GPIO_Pin;i++) idrPin << 1;
+  // mettre le contraire sur le ODR
+  if (GPIO->IDR & idrPin) {
+    MyGPIO_Reset(GPIO , GPIO_Pin );
+  }else{
+    MyGPIO_Set(GPIO ,GPIO_Pin);
+  }
 }
