@@ -5,10 +5,10 @@ int main(void){
   // PC8 en pull up input
   GPIOC->CRH &= ~(0xF);
   GPIOC->CRH |= 0x8;
-  GPIO->ODR |= 0x1 << 8;
+  GPIO->ODR |= 0x01 << 8;
   // PC10 en pulldown output
   GPIOC->CRH &= ~(0xF00);
-  GPIOC->CRH |= 0x1 << 8;
+  GPIOC->CRH |= 0x01 << 8;
 
   do
   {
@@ -17,7 +17,7 @@ int main(void){
     if(GPIO->IDR & GPIO_IDR_IDR8){
     }else{
       // Set the 10th bot of ODR to 1
-      GPIO->ODR |= 0x1 << 10;
+      GPIO->ODR |= 0x01 << 10;
     }
   }while(1);
 }

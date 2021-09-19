@@ -9,8 +9,8 @@ typedef struct{
 } MyGPIO_Struct_TypeDef;
 
 #define In_Floating 0x4
-#define In_PullDown 0x8 // ODR?
-#define In_PullUp 0x8 // ODR?
+#define In_PullDown 0x404 // ODR? //ODR 0x8
+#define In_PullUp 0x403 // ODR?
 #define In_Analog 0x0
 #define Out_Ppull 0x1
 #define Out_OD 0x5
