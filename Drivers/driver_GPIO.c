@@ -41,7 +41,7 @@ void MyGPIO_Set(GPIO_TypeDef * GPIO , char GPIO_Pin ){
 }
 
 void MyGPIO_Reset(GPIO_TypeDef * GPIO , char GPIO_Pin ){
-  GPIO->ODR |= 0x0 << GPIO_Pin;
+  GPIO->ODR &= ~(0x1 << GPIO_Pin);
 }
 
 void MyGPIO_Toggle(GPIO_TypeDef * GPIO , char GPIO_Pin ){
