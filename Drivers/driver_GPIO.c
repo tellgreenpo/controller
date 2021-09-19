@@ -12,9 +12,9 @@ void GPIO_Init_Input_ODR(MyGPIO_struct_TypeDef * GPIOStructPtr){
 }
 
 void MyGPIO_Init (MyGPIO_struct_TypeDef * GPIOStructPtr){
-  // enable GPIO A B C
+  // enable GPIO A B C D
   // GPIO_BSRR ??
-  RCC->APB2ENR |= (0x01 << 2) | (0x01 << 3) | (0x01 << 4);
+  RCC->APB2ENR |= (0x01 << 2) | (0x01 << 3) | (0x01 << 4) | (0x01<<5);
   // if Pin 1-7
   if (GPIOStructPtr->GPIO_Pin < 8){
     // CRL modify with mode in struct
@@ -41,13 +41,12 @@ void MyGPIO_Set(GPIO_TypeDef * GPIO , char GPIO_Pin ){
 }
 
 void MyGPIO_Reset(GPIO_TypeDef * GPIO , char GPIO_Pin ){
-  GPIO->ODR &= ~(0x1 << GPIO_Pin);
+  GPIO->ODR &= ~(0x01 << GPIO_Pin);
 }
 
 void MyGPIO_Toggle(GPIO_TypeDef * GPIO , char GPIO_Pin ){
   // Créer masque
-  char idrPin = 0x1;
-  for (int i=0;i<GPIO_Pin;i++) idrPin << 1;
+  unint16_t idrPin = 0x01 << GPIO_Pin;
   // mettre le contraire sur le ODR
   if (GPIO->IDR & idrPin) {
     MyGPIO_Reset(GPIO , GPIO_Pin );
