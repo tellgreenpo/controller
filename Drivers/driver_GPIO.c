@@ -25,8 +25,8 @@ void MyGPIO_Init (MyGPIO_struct_TypeDef * GPIOStructPtr){
   }else{
     // CRH modify ith mode in struct
     GPIO_Init_Input_ODR(GPIOStructPtr);
-    GPIOStructPtr->GPIO->CHR &= ~(0xF << 4*GPIOStructPtr->GPIO_Pin);
-    GPIOStructPtr->GPIO->CHR |= GPIOStructPtr->GPIO_Conf << 4*GPIOStructPtr->GPIO_Pin;
+    GPIOStructPtr->GPIO->CHR &= ~(0xF << 4*(GPIOStructPtr->GPIO_Pin-8));
+    GPIOStructPtr->GPIO->CHR |= GPIOStructPtr->GPIO_Conf << 4*(GPIOStructPtr->GPIO_Pin-8);
   }
 }
 
