@@ -39,7 +39,7 @@ void MyTimer_Base_Init(MyTimer_Struct_TypeDef * Timer){
   Effacer le bit du periph qui provoque le declenchement pendant cette routine
   */
 
-  void MyTimer_ActiveIT(TIM_TypeDef * Timer, char Prio){
+  void MyTimer_ActiveIT(TIM_TypeDef * Timer, char Prio, void (*IT_function)(void)){
     // enable IT Timer overflow
     Timer->TimId->DIER |= 0x1;
     // les codes IRQ negatifs sont pour le systeme interne du processeur
@@ -49,42 +49,58 @@ void MyTimer_Base_Init(MyTimer_Struct_TypeDef * Timer){
     if(Timer->TimId == TIM1){
   		NVIC_EnableIRQ(TIM1_UPDATE_INTERRUPT_POS);
       NVIC_SetPriority(TIM1_UPDATE_INTERRUPT_POS,Prio);
+      pFuncTIM1 = IT_function;
   	}else if (Timer->TimId == TIM2){
   		NVIC_EnableIRQ(TIM2_GENERAL_INTERRUPT_POS);
       NVIC_SetPriority(TIM2_GENERAL_INTERRUPT_POS,Prio);
+      pFuncTIM2 = IT_function;
     }else if (Timer->TimId == TIM3) {
   		NVIC_EnableIRQ(TIM3_GENERAL_INTERRUPT_POS);
       NVIC_SetPriority(TIM3_GENERAL_INTERRUPT_POS,Prio);
+      pFuncTIM3 = IT_function;
   	}else if (Timer->TimId == TIM4){
   		NVIC_EnableIRQ(TIM4_GENERAL_INTERRUPT_POS);
       NVIC_SetPriority(TIM4_GENERAL_INTERRUPT_POS,Prio);
+      pFuncTIM4 = IT_function;
   	};
   }
 
   // Create the handlers for each IT
   // redefine handlers from the startup file
   // handler is void->void
-  // _Vectors table already exists
+  // _Vectors table already exists so just need to redefine
   void TIM1_IRQHandler(void){
     /*TODO*/
     // reset bit to close the interrupt request
     TIM1->DIER &= 0x0 << 8;
+    if(pFuncTIM1 != 0){
+      (*pFuncTIM1)();
+    };
   };
 
   void TIM2_IRQHandler(void){
     /*TODO*/
     // reset bit to close the interrupt request
     TIM2->DIER &= 0x0 << 8;
+    if(pFuncTIM1 != 0){
+      (*pFuncTIM2)();
+    };
   };
 
   void TIM3_IRQHandler(void){
     /*TODO*/
     // reset bit to close the interrupt request
     TIM3->DIER &= 0x0 << 8;
+    if(pFuncTIM1 != 0){
+      (*pFuncTIM3)();
+    };
   };
 
   void TIM4_IRQHandler(void){
     /*TODO*/
     TIM4->DIER &= 0x0 <<8;
+    if(pFuncTIM1 != 0){
+      (*pFuncTIM4)();
+    };
   };
 }

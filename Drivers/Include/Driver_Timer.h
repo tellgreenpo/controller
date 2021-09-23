@@ -9,6 +9,13 @@ typedef struct{
 	unsigned short PSC;
 }MyTimer_Struct_TypeDef;
 
+// 4 pointeurs pour les 4 timers
+void (* pFuncTIM1) (void);
+void (* pFuncTIM2) (void);
+void (* pFuncTIM3) (void);
+void (* pFuncTIM4) (void);
+
+
 /*
 *************************************************************************
 				* @brief
@@ -30,6 +37,13 @@ void MyTimer_Base_Init( MyTimer_Struct_TypeDef * MyTimer ) ;
 */
 
 void MyTimer_ActiveIT(TIM_TypeDef * Timer, char Prio);
+
+void TIM1_IRQHandler(void);
+void TIM2_IRQHandler(void);
+void TIM3_IRQHandler(void);
+void TIM4_IRQHandler(void);
+
+
 
 #define MyTimer_Base_Start(Timer) (Timer->TimId->CR1 |= 0x1)
 #define MyTimer_Base_Stop(Timer)	(Timer->TimId->CR1 |= 0x0)
