@@ -1,10 +1,10 @@
 #include "MYGPIO_H"
 
 void GPIO_Init_Input_ODR(MyGPIO_struct_TypeDef * GPIOStructPtr){
-  if(GPIOStructPtr->GPIO_Conf == In_PullDown){
+  if((int)GPIOStructPtr->GPIO_Conf == In_PullDown){
     GPIOStructPtr->GPIO->ODR &= 0x0 << GPIOStructPtr->GPIO_Pin;
     GPIOStructPtr->GPIO_Conf = 0x8;
-  }else if (GPIOStructPtr->GPIO_Conf == In_PullUp){
+  }else if ((int)GPIOStructPtr->GPIO_Conf == In_PullUp){
     GPIOStructPtr->GPIO->ODR &= 0x0 << GPIOStructPtr->GPIO_Pin;
     GPIOStructPtr->GPIO->ODR |= 0x1 << GPIOStructPtr->GPIO_Pin;
     GPIOStructPtr->GPIO_Conf = 0x8;
@@ -12,9 +12,16 @@ void GPIO_Init_Input_ODR(MyGPIO_struct_TypeDef * GPIOStructPtr){
 }
 
 void MyGPIO_Init (MyGPIO_struct_TypeDef * GPIOStructPtr){
-  // enable GPIO A B C D
-  // GPIO_BSRR ??
-  RCC->APB2ENR |= (0x01 << 2) | (0x01 << 3) | (0x01 << 4) | (0x01<<5);
+  // Enable GPIO ports
+  if(GPIOStructPtr->GPIO == GPIOA){
+    RCC->APB2ENR |= 0x01 << 2;
+  }else if(GPIOStructPtr->GPIO == GPIOB){
+    RCC->APB2ENR |= 0x01 << 3;
+  }else if(GPIOStructPtr->GPIO == GPIOC){
+    RCC->APB2ENR |= 0x01 << 4;
+  }else if(GPIOStructPtr->GPIO == GPIOD){
+    RCC->APB2ENR |= 0x01 << 5;
+  }
   // if Pin 1-7
   if (GPIOStructPtr->GPIO_Pin < 8){
     // CRL modify with mode in struct
