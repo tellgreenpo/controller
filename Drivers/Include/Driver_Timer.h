@@ -7,13 +7,8 @@ typedef struct{
 	TIM_TypeDef * TimId; // TIM1 a TIM4
 	unsigned short ARR;
 	unsigned short PSC;
-}MyTimer_Struct_TypeDef;
+} MyTimer_Struct_TypeDef;
 
-// 4 pointeurs pour les 4 timers
-void (* pFuncTIM1) (void);
-void (* pFuncTIM2) (void);
-void (* pFuncTIM3) (void);
-void (* pFuncTIM4) (void);
 
 
 /*
@@ -21,22 +16,21 @@ void (* pFuncTIM4) (void);
 				* @brief
 				*				@param -> Parametre sous forme d'une structure (son adresse) contenant les
 								informations de base
-				*				@Note -> Fonction � lancer syst�matiquement avant d'aller plus en d�tail dans les
+				*				@Note -> Fonction ? lancer syst?matiquement avant d'aller plus en d?tail dans les
 								conf plus fines (PWM,codeurs inc...)
 */
 
 void MyTimer_Base_Init( MyTimer_Struct_TypeDef * MyTimer ) ;
 
 
-/*
-*************************************************************************
-				* @brief
-				*				@param -> - TIM_TypeDef * Timer : Timer concerne
-													- char Prio : de 0 a 15
-				*				@Note : La fonction MyTimer_Base_Init doit avoir ete lancee au prealable
-*/
+/**************************************************************************
+		* @brief
+		*				@param -> - TIM_TypeDef * Timer : Timer concerne
+											- char Prio : de 0 a 15
+		*				@Note : La fonction MyTimer_Base_Init doit avoir ete lancee au prealable
+**************************************************************************/
 
-void MyTimer_ActiveIT(TIM_TypeDef * Timer, char Prio);
+void MyTimer_ActiveIT(TIM_TypeDef * Timer, char Prio, void (*IT_function)(void)) ; 
 
 void TIM1_IRQHandler(void);
 void TIM2_IRQHandler(void);
@@ -45,16 +39,7 @@ void TIM4_IRQHandler(void);
 
 
 
-#define MyTimer_Base_Start(Timer) (Timer->TimId->CR1 |= 0x1)
-#define MyTimer_Base_Stop(Timer)	(Timer->TimId->CR1 |= 0x0)
-
-// TIM1 Update interrupt postition 25
-#define TIM1_UPDATE_INTERRUPT_POS 25;
-// TIM2 interrupt general position 28
-#define TIM2_GENERAL_INTERRUPT_POS 28;
-// TIM3 interrupt general position 29
-#define TIM3_GENERAL_INTERRUPT_POS 29;
-// TIM4 interrupt general position 30
-#define TIM4_GENERAL_INTERRUPT_POS 30;
+#define MyTimer_Base_Start(Timer) (Timer->CR1 |= 0x1)
+#define MyTimer_Base_Stop(Timer)	(Timer->CR1 |= 0x0)
 
 #endif
