@@ -30,25 +30,28 @@ void MyTimer_Base_Init( MyTimer_Struct_TypeDef * MyTimer ) ;
 		*				@Note : La fonction MyTimer_Base_Init doit avoir ete lancee au prealable
 **************************************************************************/
 
-void MyTimer_ActiveIT(TIM_TypeDef * Timer, char Prio, void (*IT_function)(void)) ;
+void MyTimer_ActiveIT(TIM_TypeDef * Timer, char Prio, void (*IT_function)(void)) ; 
 
 void TIM1_IRQHandler(void);
 void TIM2_IRQHandler(void);
 void TIM3_IRQHandler(void);
 void TIM4_IRQHandler(void);
 
-/**
-*	@brief
-	*	@param	....
-	*	@Note		Active le channel specifie suTimerr le timer specifie ???
-	*					la gestion de la configuration I/O n'est pas faite dans cette fonction
-	*					ni le reglage de la periode de la PWM (ARR, PSC)
-*/
-void MyTimer_PWM(TIM_TypeDef * Timer, char Channel);
-
 
 
 #define MyTimer_Base_Start(Timer) (Timer->CR1 |= 0x1)
 #define MyTimer_Base_Stop(Timer)	(Timer->CR1 |= 0x0)
 
+/***************************************************************************
+	*	@brief
+	*	@param	....
+	*	@Note		Active le channel specifie suTimerr le timer specifie ???
+	*					la gestion de la configuration I/O n'est pas faite dans cette fonction
+	*					ni le reglage de la periode de la PWM (ARR, PSC)
+**************************************************************************/
+void MyTimer_PWM(TIM_TypeDef * Timer, char Channel);
+
+void setCycle_PWM(TIM_TypeDef * Timer, char Channel, int cycle) ;
+
 #endif
+
