@@ -73,28 +73,28 @@ void MyTimer_Base_Init(MyTimer_Struct_TypeDef * Timer){
   	};
   }
 
-
-
-
-
-
+	
+	
+	
+	
+	
   // Create the handlers for each IT
   // redefine handlers from the startup file
   // handler is void->void
   // _Vectors table already exists so just need to redefine
-
-
-
+	
+	
+	
 	  void TIM1_UP_IRQHandler(void){
     // reset bit to close the interrupt request
-    TIM1->SR &= ~TIM_SR_UIF ;
+    TIM1->SR &= ~TIM_SR_UIF ; 
     if(pFuncTIM1 != 0){
       (*pFuncTIM1)();
     }
   }
 
-
-
+	
+	
 	  void TIM2_IRQHandler(void){
     // reset bit to close the interrupt request
     TIM2->SR &= ~TIM_SR_UIF ;
@@ -102,8 +102,8 @@ void MyTimer_Base_Init(MyTimer_Struct_TypeDef * Timer){
       (*pFuncTIM2)();
     }
   }
-
-
+		
+	
 
 
   void TIM3_IRQHandler(void){
@@ -121,55 +121,43 @@ void MyTimer_Base_Init(MyTimer_Struct_TypeDef * Timer){
     }
   }
 
-  // Check this tutorial : https://deepbluembedded.com/stm32-pwm-example-timer-pwm-mode-tutorial/
-
  void MyTimer_PWM(TIM_TypeDef * Timer, char Channel){
     // Creating mask
     uint8_t mask;
+	 
     /*
-    * bit 0 1
+    * bit 0 1 - CCxS
     * This bit-field defines the direction of the channel (input/output) as well as the used input.
     * 00: CC1 channel is configured as output
     */
-    mask = 0U ;
+    mask = 0 ;
+	 
     /*
-    * bit 2 - OC1FE
-    * An active edge on the trigger input acts like a compare match on CC1 output. Then, OC
-    * is set to the compare level independently from the result of the comparison. Delay to sample
-    * the trigger input and to activate CC1 output is reduced to 3 clock cycles. OCFE acts only if
-    * the channel is configured in PWM1 or PWM2 mode.
+    * bit 2 - OCxFE
     */
-    mask |= 0x01 << 2;
+
     /*
-    * bit 3
-    * Output compare 1 preload NVIC_EnableIR
-    * The PWM mode can be used without validating the preload register only in one-pulse mode
-    * (OPM bit set in TIMx_CR1 register). Else the behavior is not guaranteed.
+    * bit 3 - OCxPE
     */
-    mask |= 0x01 << 3;
+	 
     /*
-    *  4 5 6 bit
+    *  4 5 6 bit - OCxM
     * 110 : PWM mode 1 ==> In upcounting, channel 1 is active as long as TIMx_CNT<TIMx_CCR1 else inactive.
     * 111 PWM mode 2 ==> In upcounting, channel 1 is inactive as long as TIMx_CNT<TIMx_CCR1 else active.
     *  Active ==> OC1REF = '1'
     */
     mask |= ((0x01 << 2) | (0x01 << 1) | 0x0) <<4 ;
+		
     /*
-    * bit 7
-    * On laisse a 0 parce que jsp on verra
+    * bit 7 - OCxCE
     */
+		
 
-    // Selon ST auto reload preload enable in ARPE bit in CR1
-    Timer->CR1 |= 0x01 << 7;
 
-    // Init all UG bit in EGR register
-    Timer->EGR |= 0x1;
 
     // Enable output and polarity config
     // CCER bit 0 ==> output signal to output pin
     // CCER bit 1 ==> output polarity {0 : active high}
-
-    // Enable capture/compare interrupts? TIMx_DIER register bit 1-4 for channels? ==> No DIER is for interrupt
     if (Channel == 1){
       Timer->CCER |= 0x01;
       Timer->CCMR1 |= mask;
@@ -184,37 +172,22 @@ void MyTimer_Base_Init(MyTimer_Struct_TypeDef * Timer){
       Timer->CCMR2 |= mask<<8;
     }
 
-    /*
-    Indication de la part de ST :}
-    OCxM ==> PWM mode
-    OCxPE ==> enable
-    auto reload preload register ==> ARPE bit set in TIMx_CR1
-    Init all UG bit in EGR registers
-    Output enable:
-      CCxE
-      CCxNE
-      MOE
-      OSSI
-      OSSR
-      in TOMx_CCER and TIMx_BDTR
-
-    Problem ==> BDTR register only foor advanced timers wich are independent from Gerenal Purpose Timers
-    so how do we do this?
-    */
-
   }
+ 
+	
 
   // Update CCRx
 
 	void setCycle_PWM(TIM_TypeDef * Timer, char Channel, int cycle) {
-
+		
 		if (Channel == 1) {
-			Timer->CCR1 = (Timer->ARR + 1) * (Timer->PSC + 1) *(1-cycle/100) ;
+			Timer->CCR1 = (Timer->ARR + 1)* cycle/100 ; 
 		} else if (Channel==2) {
-			Timer->CCR2 = (Timer->ARR + 1) * (Timer->PSC + 1) *(1-cycle/100) ;  ;
+			Timer->CCR2 = (Timer->ARR + 1)* cycle/100 ; 
 		} else if (Channel==3) {
-			Timer->CCR3 = (Timer->ARR + 1) * (Timer->PSC + 1) *(1-cycle/100) ;  ;
+			Timer->CCR3 = (Timer->ARR + 1)* cycle/100 ; 
 		} else if (Channel==4) {
-			Timer->CCR4 = (Timer->ARR + 1) * (Timer->PSC + 1) *(1-cycle/100) ;  ;
+			Timer->CCR4 = (Timer->ARR + 1)* cycle/100 ; 
 		}
 }
+
