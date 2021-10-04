@@ -1,23 +1,41 @@
-#include "stm32f10x.h"
+#include "stm32f10x.h" 
+#include "Driver_Timer.h"
+#include "Driver_GPIO.h"
 
-int main(void){
-  RCC->APB2ENR |= (0x01 <<2) | (0x01 << 3) | (0x01 << 4);
-  // PC8 en pull up input
-  GPIOC->CRH &= ~(0xF);
-  GPIOC->CRH |= 0x8;
-  GPIO->ODR |= 0x01 <<8;
-  // PC10 en pulldown output
-  GPIOC->CRH &= ~(0xF00);
-  GPIOC->CRH |= 0x01 << 8;
+MyGPIO_Struct_TypeDef GPIO_Struct ; 
+MyTimer_Struct_TypeDef TimerTest ;
 
-  do
-  {
-    // PC8 IDR 0 ==> PC10 ODR 1
-    // Compare IDR register with 0x0100 to check if the 8th bit is 1
-    if(GPIO->IDR & GPIO_IDR_IDR8){
-    }else{
-      // Set the 10th bot of ODR to 1
-      GPIO->ODR |= 0x01 << 10;
-    }
-  }while(1);
+void callback(void) {
+	
+	MyGPIO_Toggle(GPIO_Struct.GPIO, GPIO_Struct.GPIO_Pin) ; 
+	
 }
+
+
+int main (void) 
+{
+		
+	// Test PWM // 
+	TimerTest.TimId = TIM2 ; 
+	TimerTest.ARR = 36-1 ; 
+	TimerTest.PSC = 20-1 ; 
+	MyTimer_Base_Init(& TimerTest) ; 
+
+	
+	
+	// Configuration Sortie
+	GPIO_Struct.GPIO = GPIOA ; 
+	GPIO_Struct.GPIO_Pin = 2 ;
+	GPIO_Struct.GPIO_Conf = AltOut_Ppull ; 
+	MyGPIO_Init(& GPIO_Struct) ;
+	
+	MyTimer_PWM(TimerTest.TimId, 3) ;
+	
+	setCycle_PWM(TimerTest.TimId, 3, 20) ;
+	
+	MyTimer_Base_Start(TimerTest.TimId) ;
+	
+	while(1) ;
+	
+}
+
