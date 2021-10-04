@@ -32,11 +32,6 @@ void MyTimer_Base_Init( MyTimer_Struct_TypeDef * MyTimer ) ;
 
 void MyTimer_ActiveIT(TIM_TypeDef * Timer, char Prio, void (*IT_function)(void)) ; 
 
-void TIM1_IRQHandler(void);
-void TIM2_IRQHandler(void);
-void TIM3_IRQHandler(void);
-void TIM4_IRQHandler(void);
-
 
 
 #define MyTimer_Base_Start(Timer) (Timer->CR1 |= 0x1)
